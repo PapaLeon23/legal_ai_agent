@@ -26,8 +26,8 @@ else:
 # ==========================================
 # 1. API 설정 및 모델 초기화
 # ==========================================
-GEMINI_API_KEY = "AIzaSyCQs_5S4K9hwkQaUYxpCQ6Bxl1OwLAJD6c"
-LAW_API_KEY = "sjoosung"
+GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+LAW_API_KEY = st.secrets["LAW_API_KEY"]
 
 genai.configure(api_key=GEMINI_API_KEY, transport='rest')
 model = genai.GenerativeModel('gemini-2.5-flash')
@@ -204,4 +204,5 @@ if prompt := st.chat_input("사업 모델이나 상황, 요청사항을 입력�
 
         except Exception as e:
             status.update(label="오류 발생", state="error")
+
             st.error(f"오류가 발생했습니다: {str(e)}")
