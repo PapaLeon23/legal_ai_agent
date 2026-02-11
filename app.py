@@ -71,7 +71,7 @@ st.markdown("""
 
     /* 하단 입력창(Chat Input) 너비를 결과창과 동일하게 강제 고정 */
     .stChatInputContainer {
-        max-width: 1100px;
+        max-width: 600px;
         margin: 0 auto;
     }
     
@@ -221,4 +221,5 @@ if prompt := st.chat_input("사업 모델이나 상황, 요청사항을 입력�
 
         except Exception as e:
             status.update(label="오류 발생", state="error")
+
             st.error(f"오류가 발생했습니다: {str(e)}")
