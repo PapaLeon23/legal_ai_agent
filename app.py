@@ -26,6 +26,7 @@ else:
 # ==========================================
 # 1. API 설정 및 모델 초기화
 # ==========================================
+# Secrets 파일이 없으면 직접 입력한 키를 사용하도록 설정
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 LAW_API_KEY = st.secrets["LAW_API_KEY"]
 
@@ -37,7 +38,15 @@ model = genai.GenerativeModel('gemini-2.5-flash')
 # ==========================================
 st.set_page_config(page_title="AI Legal Assistant", page_icon="⚖️", layout="wide")
 
-# 샘플 데모의 깔끔한 느낌을 주는 커스텀 CSS
+st.markdown("""
+    <style>
+    .block-container { max-width: 1100px; padding-top: 2rem; }
+    .stChatMessage { border-radius: 15px; margin-bottom: 1rem; }
+    /* 답변 완료 후 상단으로 시선을 유도하기 위한 앵커 설정 */
+    #output-header { padding-top: 10px; }
+    </style>
+    """, unsafe_allow_html=True)
+
 st.markdown("""
     <style>
     .main {
@@ -59,6 +68,13 @@ st.markdown("""
         margin-bottom: 10px;
         font-size: 0.9rem;
     }
+
+    /* 하단 입력창(Chat Input) 너비를 결과창과 동일하게 강제 고정 */
+    .stChatInputContainer {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    
     </style>
     """, unsafe_allow_html=True)
 
@@ -99,7 +115,7 @@ with st.sidebar:
     st.title("⚖️ Legal AI")
     st.markdown("---")
     st.markdown("### 서비스 안내")
-    st.info("국가법령정보센터의 실시간 데이터와 Gemini 2.5의 추론 능력을 결합한 법률 어시스턴트입니다.")
+    st.info("국가법령정보센터의 실시간 데이터와 Gemini의 추론 능력을 결합한 법률 어시스턴트입니다.")
     
     st.markdown("### 지원 범위")
     st.write("✔️ 신규 비즈니스 모델 검토")
@@ -161,7 +177,7 @@ if prompt := st.chat_input("사업 모델이나 상황, 요청사항을 입력�
                 raw_data = search_law_data(kw, target=target_type)
                 if raw_data:
                     all_legal_context += refine_legal_data(raw_data, target_type)
-                time.sleep(1.5)
+                time.sleep(3.0)
 
             # [Step 3] 데이터 필터링 단계 추가
             st.write("🧹 관련성 낮은 데이터 필터링 중...")
@@ -183,12 +199,13 @@ if prompt := st.chat_input("사업 모델이나 상황, 요청사항을 입력�
             사용자 상황: {prompt}
             참고 법률 데이터: {filtered_context}
             
-            작성 지침:
-            1. 비즈니스 모델의 인허가 등록 요건(자본금, 인력 등)을 법령 기준으로 먼저 설명하세요.
-            2. 발생 가능한 리스크와 금지 행위를 가장 관련도가 높은 법령 기준으로 상세히 짚어주세요.
-            3. 참고 데이터가 부족하다면 일반적인 법률 상식과 최신 규제 동향을 포함하여 풍부하게 답변하세요.
-            4. 모든 답변은 API를 통해 확보한 법률에 근거하여 해야하며 없는 사실을 꾸며내지 마세요.
-            5. 마지막에는 '본 답변은 법적 효력이 없으므로 반드시 전문가와 상의하십시오'를 포함하세요.
+            [지침]
+            1. (대화형 도입) 처음에는 인사나 서론 없이 "이 사업(상황)의 핵심은 ~입니다"라고 짧게 핵심 요약부터 시작하세요.
+            2. (BM 분석) 질문이 신규 아이디어라면 등록 요건(자본금/인력 등), 관련 법령, 리스크를 순서대로 설명하세요.
+            3. (법률 질문) 일반 질문이라면 관련 법률 조항과 판례 요지를 명확히 소개하세요.
+            4. (정직성) 만약 확보된 데이터 중 일치하는 법률이나 판례가 없으면 지어내지 말고 "현재 데이터로는 정확한 근거를 찾기 어렵다"고 답하세요.
+            5. (추가 질문 유도) 분석 후에는 반드시 "더 구체적으로 어떤 부분을 알아봐 드릴까요?" 같은 메시지로 대화를 이어가세요.
+            6. 마지막에 면책 문구를 포함하세요.
             """
             
             time.sleep(1.5)
@@ -204,5 +221,4 @@ if prompt := st.chat_input("사업 모델이나 상황, 요청사항을 입력�
 
         except Exception as e:
             status.update(label="오류 발생", state="error")
-
             st.error(f"오류가 발생했습니다: {str(e)}")
