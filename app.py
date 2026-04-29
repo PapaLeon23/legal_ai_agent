@@ -31,7 +31,7 @@ GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 LAW_API_KEY = st.secrets["LAW_API_KEY"]
 
 genai.configure(api_key=GEMINI_API_KEY, transport='rest')
-model = genai.GenerativeModel('gemini-2.0-flash')
+model = genai.GenerativeModel('Gemini 3.1 Flash Lite')
 
 # ==========================================
 # 2. 디자인 개선 (CSS)
@@ -118,7 +118,7 @@ with st.sidebar:
     st.info("국가법령정보센터의 실시간 데이터와 Gemini의 추론 능력을 결합한 법률 어시스턴트입니다.")
     
     st.markdown("### 지원 범위")
-    st.write("✔️ 신규 비즈니스 모델 검토")
+    st.write("✔️ 신규 비즈니스 모델 기반")
     st.write("✔️ 행정규칙 및 판례 해석")
     st.write("✔️ 규제 리스크 분석")
     
@@ -201,7 +201,7 @@ if prompt := st.chat_input("사업 모델이나 상황, 요청사항을 입력�
             
             [지침]
             1. (대화형 도입) 처음에는 인사나 서론 없이 "이 사업(상황)의 핵심은 ~입니다"라고 짧게 핵심 요약부터 시작하세요.
-            2. (BM 분석) 질문이 신규 아이디어라면 등록 요건(자본금/인력 등), 관련 법령, 리스크를 순서대로 설명하세요.
+            2. (BM 분석) 질문이 신규 아이디어라면 등록 요건(자본금/인력 등), 관련 법령, 법적 리스크를 순서대로 설명하세요.
             3. (법률 질문) 일반 질문이라면 관련 법률 조항과 판례 요지를 명확히 소개하세요.
             4. (정직성) 만약 확보된 데이터 중 일치하는 법률이나 판례가 없으면 지어내지 말고 "현재 데이터로는 정확한 근거를 찾기 어렵다"고 답하세요.
             5. (추가 질문 유도) 분석 후에는 반드시 "더 구체적으로 어떤 부분을 알아봐 드릴까요?" 같은 메시지로 대화를 이어가세요.
