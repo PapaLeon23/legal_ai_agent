@@ -31,7 +31,7 @@ GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 LAW_API_KEY = st.secrets["LAW_API_KEY"]
 
 genai.configure(api_key=GEMINI_API_KEY, transport='rest')
-model = genai.GenerativeModel('Gemini 3.1 Flash Lite')
+model = genai.GenerativeModel('Gemini 2.5 Flash Lite')
 
 # ==========================================
 # 2. 디자인 개선 (CSS)
