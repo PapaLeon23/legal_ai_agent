@@ -129,7 +129,7 @@ with st.sidebar:
 
 # 메인 헤더
 st.title("⚖️AI Legal Assistant")
-st.markdown("복잡한 법률 상황이나 사업 아이디어를 입력하면 관련 법령을 분석합니다.")
+st.markdown("BM을 입력하면 관련 법령을 분석합니다.")
 
 # 대화 기록 관리
 if "messages" not in st.session_state:
